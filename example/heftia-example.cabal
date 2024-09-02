@@ -1,0 +1,51 @@
+cabal-version:      2.4
+name:               heftia-example
+version:            0.1.0.0
+
+-- A short (one-line) description of the package.
+synopsis: A docker sandbox for Heftia.
+
+-- The license under which the package is released.
+license:            MPL-2.0
+license-file:       LICENSE
+author:             Yamada Ryo <ymdfield@outlook.jp>
+maintainer:         Yamada Ryo <ymdfield@outlook.jp>
+
+-- A copyright notice.
+copyright: 2024 Yamada Ryo
+
+tested-with:
+    GHC == 9.2.8
+
+source-repository head
+    type: git
+    location: https://github.com/sayo-hs/heftia-example
+    subdir: example
+
+common common-base
+    ghc-options:      -Wall
+    default-language: GHC2021
+
+    default-extensions:
+        LambdaCase,
+        DerivingStrategies,
+        DataKinds,
+        TypeFamilies,
+        BlockArguments,
+        FunctionalDependencies,
+        RecordWildCards,
+        DefaultSignatures,
+        PatternSynonyms
+
+    build-depends:
+        base ^>= 4.16,
+        heftia-effects ^>= 0.3,
+        ghc-typelits-knownnat ^>= 0.7,
+
+    ghc-options: -Wall -fplugin GHC.TypeLits.KnownNat.Solver
+
+executable heftia-example
+    import: common-base
+
+    main-is: Main.hs
+    hs-source-dirs: app/

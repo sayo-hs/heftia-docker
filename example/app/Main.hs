@@ -1,0 +1,51 @@
+-- This Source Code Form is subject to the terms of the Mozilla Public
+-- License, v. 2.0. If a copy of the MPL was not distributed with this
+-- file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+-- | https://github.com/sayo-hs/heftia/tree/v0.3.0?tab=readme-ov-file#two-interpretations-of-the-censor-effect-for-writer
+module Main where
+
+import Control.Effect (type (<:), type (<<:))
+import Control.Effect.ExtensibleChurch (runEff)
+import Control.Effect.Hefty (interpretRecH)
+import Control.Effect.Interpreter.Heftia.Writer (elabWriterPost, elabWriterPre, runTell)
+import Control.Monad.IO.Class (liftIO)
+import Data.Effect.Writer (Tell, WriterH, censor, tell)
+
+hello :: (Tell String <: m, Monad m) => m ()
+hello = do
+    tell "Hello"
+    tell " world!"
+
+censorHello :: (Tell String <: m, WriterH String <<: m, Monad m) => m ()
+censorHello =
+    censor
+        ( \s ->
+            if s == "Hello"
+                then "Goodbye"
+                else
+                    if s == "Hello world!"
+                        then "Hello world!!"
+                        else s
+        )
+        hello
+
+main :: IO ()
+main = runEff do
+    (sPre, _) <-
+        runTell
+            . interpretRecH (elabWriterPre @String)
+            $ censorHello
+
+    (sPost, _) <-
+        runTell
+            . interpretRecH (elabWriterPost @String)
+            $ censorHello
+
+    liftIO $ putStrLn $ "Pre-applying: " <> sPre
+    liftIO $ putStrLn $ "Post-applying: " <> sPost
+
+{-
+Pre-applying: Goodbye world!
+Post-applying: Hello world!!
+-}
