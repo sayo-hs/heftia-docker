@@ -8,7 +8,7 @@ A docker sandbox for Heftia.
 $ git clone https://github.com/sayo-hs/heftia-docker
 $ cd heftia-docker
 $ docker build -t sayo-hs/heftia docker
-$ docker run --rm -it -u $(id -u):$(id -g) -v $PWD:/work --workdir /work/example sayo-hs/heftia cabal run
+$ docker run --rm -it -v $PWD:/work --workdir /work/example sayo-hs/heftia cabal run
 ...
 Pre-applying: Goodbye world!
 Post-applying: Hello world!!
