@@ -38,8 +38,8 @@ common common-base
         PatternSynonyms
 
     build-depends:
-        base ^>= 4.16,
-        heftia-effects ^>= 0.3,
+        base,
+        heftia-effects ^>= 0.4,
         ghc-typelits-knownnat ^>= 0.7,
 
     ghc-options: -Wall -fplugin GHC.TypeLits.KnownNat.Solver
